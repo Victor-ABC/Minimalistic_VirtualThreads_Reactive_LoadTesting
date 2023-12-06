@@ -5,7 +5,12 @@ const csv = require('csv-parser');
 const config = require('./config.json');
 const port = config.port;
 const apiUrl = `http://localhost:${port}/custom-metrics/system-info`;
-const csvFilePath = './output/ressources/metric_output.csv';
+
+// Read vus value from config.json
+const vus = config.vus;
+
+// Construct the CSV file path with vus as a suffix
+const csvFilePath = `./output/ressources/metric_output_${vus}.csv`;
 
 function sendMonitorRequest() {
   http.get(apiUrl, (response) => {

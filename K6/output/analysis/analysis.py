@@ -23,33 +23,63 @@ def read_json(file_path):
 def read_csv(file_path):
     # Read CSV into a DataFrame
     df_csv = pd.read_csv(file_path, header=None, names=['timestamp', 'cpuUsage', 'totalMemory', 'freeMemory', 'percentOfCpuUsed', 'percentOfRamUsed', 'currentTime'])
-    
-    return df_csv
+
+    # Calculate the average for relevant columns
+    avg_cpuUsage = df_csv['cpuUsage'].mean()
+    avg_totalMemory = df_csv['totalMemory'].mean()
+    avg_freeMemory = df_csv['freeMemory'].mean()
+    avg_percentOfCpuUsed = df_csv['percentOfCpuUsed'].mean()
+    avg_percentOfRamUsed = df_csv['percentOfRamUsed'].mean()
+
+    # Create a DataFrame with average values
+    df_avg = pd.DataFrame({
+        'avg_cpuUsage': [avg_cpuUsage],
+        'avg_totalMemory': [avg_totalMemory],
+        'avg_freeMemory': [avg_freeMemory],
+        'avg_percentOfCpuUsed': [avg_percentOfCpuUsed],
+        'avg_percentOfRamUsed': [avg_percentOfRamUsed]
+    })
+
+    return df_avg
 
 def main():
-    # Provide the absolute path to the JSON file
-    json_file_path = os.path.abspath('./../k6/summary_100.json')
+    # Provide the path to the config.json file
+    config_file_path = os.path.abspath('../../config.json')
 
-    # Provide the absolute path to the CSV file
-    csv_file_path = os.path.abspath('./../ressources/metric_output.csv')
-    
-    # Extract index from the filename
-    index = json_file_path.split('_')[-1].split('.')[0]
+    # Read values from config.json
+    with open(config_file_path, 'r') as config_file:
+        config_data = json.load(config_file)
 
-    # Read JSON and create DataFrame
-    df_json = read_json(json_file_path)
+    # Extract values from config.json
+    start_vus = 100
+    end_vus = config_data['vus']
+    port = config_data['port']
 
-    # Read CSV and create DataFrame
-    df_csv = read_csv(csv_file_path)
+    # Create an empty DataFrame to store the results
+    final_df = pd.DataFrame()
 
-    # Merge DataFrames on a common column (e.g., timestamp)
-    merged_df = pd.merge(df_json, df_csv, left_index=True, right_index=True)
+    for vus in range(start_vus, end_vus + 1, 100):
+        # Construct the paths based on the loop variable
+        json_file_path = os.path.abspath(f'./../k6/summary_{vus}.json')
+        csv_file_path = os.path.abspath(f'./../ressources/metric_output_{vus}.csv')
 
-    # Set the index
-    merged_df.index = [index]
+        # Read JSON and create DataFrame
+        df_json = read_json(json_file_path)
 
-    # Display the merged DataFrame
-    print(merged_df)
+        # Read CSV, calculate average, and create DataFrame
+        df_avg = read_csv(csv_file_path)
+
+        # Merge DataFrames on a common column (e.g., timestamp)
+        merged_df = pd.merge(df_json, df_avg, left_index=True, right_index=True)
+
+        # Set the index
+        merged_df.index = [str(vus)]
+
+        # Add the row to the final DataFrame
+        final_df = pd.concat([final_df, merged_df])
+
+    # Display the final DataFrame
+    print(final_df)
 
 if __name__ == "__main__":
     main()
