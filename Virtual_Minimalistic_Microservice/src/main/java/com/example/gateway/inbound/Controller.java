@@ -21,6 +21,6 @@ public class Controller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return "Minimalistic";
+        return "Virtual - Minimalistic";
     }
 }
