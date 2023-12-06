@@ -1,34 +1,42 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
 
+const configFile = 'config.json';
+const configData = JSON.parse(open(configFile));
+const port = parseInt(configData.port); // Use the "port" value from the JSON
+const vus = parseInt(configData.vus); // Use the "vus" value from the JSON
+
+const csvFile = 'results.csv';
+
 export const options = {
     stages: [
-        { duration: '5s', target: 0 },   // Warm-up phase with 0 VUs
-        { duration: '10s', target: 5000 }, // Linear increase to 100 VUs
-        { duration: '10s', target: 5000 }, // Hold at 100 VUs for 10 seconds
-        { duration: '10s', target: 0 },   // Ramp down to 0 VUs
+        { duration: '2s', target: 0 },
+        { duration: '2s', target: vus }, // Use the "vus" value here
+        { duration: '2s', target: vus }, // Use the "vus" value here
+        { duration: '2s', target: 0 },
     ],
 };
 
-
 export default function () {
-    const url = 'http://localhost:8081/D';
 
-    // Record the start time of the request
     const startTime = new Date().getTime();
-
-    // Send an HTTP GET request to the specified URL
-    const response = http.get(url);
-
-    // Record the end time of the request
+    const response = http.get(`http://localhost:${port}/minimalistic`);
     const endTime = new Date().getTime();
-
-    // Calculate the response time
     const responseTime = endTime - startTime;
 
     // Log the response time
-    console.log(`Response time: ${responseTime} ms`);
+    console.log(`[localhost:${port}] Response time: ${responseTime} ms`);
+
+
 
     // Introduce a sleep to simulate user think time
     sleep(1);
+}
+
+export function handleSummary(data) {
+    // Return the default data object
+    const my_string = "C:\\Users\\User\\fep\\minimalistic_gateway\\K6\\output/k6/summary_" + vus + ".json";
+    const result = {};
+    result[my_string] = JSON.stringify(data);
+    return result;
 }
