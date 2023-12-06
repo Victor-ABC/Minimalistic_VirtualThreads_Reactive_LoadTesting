@@ -16,15 +16,19 @@ public class MetricsController {
     public SystemInfoDTO getSystemInfo() {
         OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double cpuUsage = osBean.getProcessCpuLoad() * 100;
-        long totalMemory = osBean.getTotalMemorySize();
-        long freeMemory = osBean.getFreeMemorySize();
+
+        // Convert total memory and free memory to megabytes
+        long totalMemoryInBytes = osBean.getTotalMemorySize();
+        long freeMemoryInBytes = osBean.getFreeMemorySize();
+        long totalMemoryInMB = totalMemoryInBytes / (1024 * 1024);  // Convert bytes to megabytes
+        long freeMemoryInMB = freeMemoryInBytes / (1024 * 1024);    // Convert bytes to megabytes
 
         double percentOfCpuUsed = (cpuUsage / osBean.getAvailableProcessors());
-        double percentOfRamUsed = (1 - ((double) freeMemory / totalMemory)) * 100;
+        double percentOfRamUsed = (1 - ((double) freeMemoryInBytes / totalMemoryInBytes)) * 100;
 
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss:SSS"));
 
-        return new SystemInfoDTO(cpuUsage, totalMemory, freeMemory, percentOfCpuUsed, percentOfRamUsed, formattedTime);
+        return new SystemInfoDTO(cpuUsage, totalMemoryInMB, freeMemoryInMB, percentOfCpuUsed, percentOfRamUsed, formattedTime);
     }
 }
