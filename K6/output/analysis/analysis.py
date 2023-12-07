@@ -29,7 +29,7 @@ def read_csv(file_path):
     avg_totalMemory = df_csv['totalMemory'].mean()
     avg_freeMemory = df_csv['freeMemory'].mean()
     avg_percentOfCpuUsed = df_csv['percentOfCpuUsed'].mean()
-    avg_percentOfRamUsed = df_csv['percentOfRamUsed'].mean()
+    avg_percentOfRamUsed = df_csv['percentOfRamUsed'].mean() / 100
 
     # Create a DataFrame with average values
     df_avg = pd.DataFrame({

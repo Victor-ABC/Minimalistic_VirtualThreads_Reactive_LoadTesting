@@ -6,7 +6,7 @@ REM Set the path to k6 executable (adjust this path based on your k6 installatio
 REM Initialize iterations variable
 set iterations=0
 
-for /L %%V in (100, 100, 200) do (
+for /L %%V in (100, 100, 1000) do (
     REM Increment the iterations counter
     set /a iterations+=1
 
@@ -32,6 +32,11 @@ python analysis.py
 
 REM Sleep
 timeout /t 3
+
+python visualize.py
+
+REM Sleep
+timeout /t 100
 
 endlocal
 exit /b 0

@@ -10,10 +10,10 @@ const csvFile = 'results.csv';
 
 export const options = {
     stages: [
-        { duration: '2s', target: 0 },
-        { duration: '2s', target: vus }, // Use the "vus" value here
-        { duration: '2s', target: vus }, // Use the "vus" value here
-        { duration: '2s', target: 0 },
+        { duration: '5s', target: 0 },
+        { duration: '10s', target: vus }, // Use the "vus" value here
+        { duration: '10s', target: vus }, // Use the "vus" value here
+        { duration: '5s', target: 0 },
     ],
 };
 
