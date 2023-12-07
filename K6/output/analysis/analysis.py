@@ -51,9 +51,8 @@ def main():
         config_data = json.load(config_file)
 
     # Extract values from config.json
-    start_vus = 100
     end_vus = config_data['vus']
-    port = config_data['port']
+    start_vus = end_vus - ((config_data['iterations'] - 1) * 100)
 
     # Create an empty DataFrame to store the results
     final_df = pd.DataFrame()
@@ -77,6 +76,13 @@ def main():
 
         # Add the row to the final DataFrame
         final_df = pd.concat([final_df, merged_df])
+
+    # Save the final DataFrame to a CSV file in the current folder
+    output_csv_path = os.path.abspath('./final_metrics.csv')
+    final_df.to_csv(output_csv_path, index=True, header=True)
+
+    # Display the final DataFrame
+    print(final_df)
 
     # Display the final DataFrame
     print(final_df)

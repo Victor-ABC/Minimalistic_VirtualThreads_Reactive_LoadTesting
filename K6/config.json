@@ -1,1 +1,1 @@
-{ "info": "Port: Normal=8080 ; Reactive=8081 ; Virtual=8082", "port": "8080", "vus": 200 } 
+{ "info": "Port: Normal=8080 ; Reactive=8081 ; Virtual=8082", "port": "8080", "vus": 200, "iterations": 2 } 

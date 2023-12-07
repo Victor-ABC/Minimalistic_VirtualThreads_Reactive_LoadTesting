@@ -1,12 +1,17 @@
 @echo off
-
+setlocal enabledelayedexpansion
 
 REM Set the path to k6 executable (adjust this path based on your k6 installation)
 
-for /L %%V in (100, 100, 200) do (
+REM Initialize iterations variable
+set iterations=0
 
-    REM Update the config.json
-    echo { "info": "Port: Normal=8080 ; Reactive=8081 ; Virtual=8082", "port": "8080", "vus": %%V } > config.json
+for /L %%V in (100, 100, 200) do (
+    REM Increment the iterations counter
+    set /a iterations+=1
+
+    REM Update the config.json with the new "iterations" value
+    echo { "info": "Port: Normal=8080 ; Reactive=8081 ; Virtual=8082", "port": "8080", "vus": %%V, "iterations": !iterations! } > config.json
 
     REM Start fetching RAM and CPU
     start node monitor.js
@@ -26,6 +31,7 @@ cd .\output\analysis\
 python analysis.py
 
 REM Sleep
-timeout /t 1000
+timeout /t 3
 
+endlocal
 exit /b 0
