@@ -37,7 +37,7 @@ function sendMonitorRequest() {
 
 function saveToCsv(data) {
   const timestamp = new Date().toISOString();
-  const csvRow = `${timestamp},${data.cpuUsage},${data.totalMemory},${data.freeMemory},${data.percentOfCpuUsed},${data.percentOfRamUsed},${data.currentTime}\n`;
+  const csvRow = `${timestamp},${data.freeRamPercentage},${data.cpuUsagePercentage},${data.totalMemory},${data.freeMemory}\n`;
 
   fs.appendFile(csvFilePath, csvRow, (err) => {
     if (err) {
