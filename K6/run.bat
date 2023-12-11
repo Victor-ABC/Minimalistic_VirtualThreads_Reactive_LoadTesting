@@ -6,12 +6,12 @@ REM Set the path to k6 executable (adjust this path based on your k6 installatio
 REM Initialize iterations variable
 set iterations=0
 
-for /L %%V in (2400, 100, 3000) do (
+for /L %%V in (100, 100, 100) do (
     REM Increment the iterations counter
     set /a iterations+=1
 
     REM Update the config.json with the new "iterations" value
-    echo { "info": "Port: Normal=8080 ; Reactive=8081 ; Virtual=8082", "port": "8082", "vus": %%V, "iterations": !iterations! } > config.json
+    echo { "info": "Port: Normal=8080 ; Reactive=8081 ; Virtual=8082", "port": "8080", "vus": %%V, "iterations": !iterations! } > config.json
 
     REM Start fetching RAM and CPU
     start node monitor.js
@@ -23,7 +23,7 @@ for /L %%V in (2400, 100, 3000) do (
     taskkill /F /IM node.exe
 
     REM Sleep
-    timeout /t 3
+    timeout /t 10
 )
 
 REM Analysis

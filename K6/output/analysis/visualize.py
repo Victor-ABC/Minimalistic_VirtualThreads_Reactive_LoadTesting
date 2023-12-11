@@ -7,7 +7,7 @@ def read_and_visualize_csv(csv_file_path):
     df = pd.read_csv(csv_file_path, index_col=0)
 
     # Extract relevant columns for visualization
-    columns_to_visualize = ['avg_duration', 'error_rate', 'avg_cpuUsage', 'avg_percentOfRamUsed']
+    columns_to_visualize = ['avg_duration', 'error_rate', 'avg_cpuUsage', 'avg_percentOfRamUsed', 'request_count']
 
     # Set up the figure and axes
     fig, ax1 = plt.subplots(figsize=(12, 8))  # Adjust the figure size as needed
@@ -15,31 +15,33 @@ def read_and_visualize_csv(csv_file_path):
     # Set the width of the bars
     bar_width = 6  # Adjust the width of the bars for all columns
 
-    # Plot bars for avg_duration on the left axis with a wider bar
-    color = 'tab:blue'
-    ax1.bar(df.index, df['avg_duration'], width=bar_width, color=color, label='avg_duration')
+    # Plot bars for avg_duration and request_count on the left axis with a wider bar
+    color_duration = 'tab:blue'
+    color_count = 'tab:gray'
+    ax1.bar(df.index - bar_width/2, df['avg_duration'], width=bar_width, color=color_duration, label='avg_duration')
+    ax1.bar(df.index + bar_width/2, df['request_count'], width=bar_width, color=color_count, alpha=0.5, label='request_count')
     ax1.set_xlabel('Virtual Users')
-    ax1.set_ylabel('Average Duration (ms)', color=color)
-    ax1.tick_params(axis='y', labelcolor=color)
+    ax1.set_ylabel('Average Duration (ms) / Request Count', color=color_duration)
+    ax1.tick_params(axis='y', labelcolor=color_duration)
 
-    # Create a second y-axis for error_rate, avg_percentOfCpuUsed, and avg_percentOfRamUsed
+    # Create a second y-axis for other metrics
     ax2 = ax1.twinx()
 
     # Plot error_rate on the right axis
-    color = 'tab:red'
-    ax2.plot(df.index, df['error_rate'] * 100, color=color, linestyle='dashed', marker='o', label='error_rate')
-    ax2.tick_params(axis='y', labelcolor=color)
+    color_error_rate = 'tab:red'
+    ax2.plot(df.index, df['error_rate'] * 100, color=color_error_rate, linestyle='dashed', marker='o', label='error_rate')
+    ax2.tick_params(axis='y', labelcolor=color_error_rate)
 
     # Plot avg_percentOfCpuUsed on the right axis
-    color = 'tab:orange'
-    ax2.plot(df.index, df['avg_percentOfCpuUsed'] * 100, color=color, linestyle='dashed', marker='o', label='avg_percentOfCpuUsed')
-    ax2.tick_params(axis='y', labelcolor=color)
+    color_cpu_used = 'tab:orange'
+    ax2.plot(df.index, df['avg_cpuUsage'] * 100, color=color_cpu_used, linestyle='dashed', marker='o', label='avg_percentOfCpuUsed')
+    ax2.tick_params(axis='y', labelcolor=color_cpu_used)
 
     # Plot avg_percentOfRamUsed on the right axis
-    color = 'tab:green'
-    ax2.set_ylabel('Prozent', color=color)
-    ax2.plot(df.index, df['avg_percentOfRamUsed'] * 100, color=color, linestyle='dashed', marker='o', label='avg_percentOfRamUsed')
-    ax2.tick_params(axis='y', labelcolor=color)
+    color_ram_used = 'tab:green'
+    ax2.set_ylabel('Percentage', color=color_ram_used)
+    ax2.plot(df.index, df['avg_percentOfRamUsed'] * 100, color=color_ram_used, linestyle='dashed', marker='o', label='avg_percentOfRamUsed')
+    ax2.tick_params(axis='y', labelcolor=color_ram_used)
 
     # Set labels and title
     plt.title('Performance Metrics for Different Virtual Users')

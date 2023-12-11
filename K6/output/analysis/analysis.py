@@ -10,12 +10,14 @@ def read_json(file_path):
     avg_duration = data['metrics']['http_req_duration']['values']['avg']
     avg_waiting = data['metrics']['http_req_waiting']['values']['avg']
     error_rate = data['metrics']['http_req_failed']['values']['rate']
+    request_count = data['metrics']['http_reqs']['values']['count']
 
     # Create a DataFrame
     df = pd.DataFrame({
         'avg_duration': [avg_duration],
         'avg_waiting': [avg_waiting],
-        'error_rate': [error_rate]
+        'error_rate': [error_rate],
+        'request_count': [request_count]
     })
 
     return df
