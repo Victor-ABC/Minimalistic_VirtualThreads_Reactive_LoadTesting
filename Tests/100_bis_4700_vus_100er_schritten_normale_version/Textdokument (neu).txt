@@ -1,0 +1,15 @@
+Test bei 4700 gestoppt, da Anfrage Ressourcen keine antwort mehr bekommen hat (Actuator)
+K6-Options:
+
+export const options = {
+    stages: [
+        { duration: '5s', target: 0 },
+        { duration: '20s', target: vus }, // Use the "vus" value here
+        { duration: '20s', target: vus }, // Use the "vus" value here
+        { duration: '5s', target: 0 },
+    ],
+};
+
+Container-Options:
+1 GB RAM
+8 Cores
