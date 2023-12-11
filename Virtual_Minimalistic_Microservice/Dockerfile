@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/gateway-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Festlegen des Befehls zum Ausführen der Anwendung
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Xmx256m", "-jar", "app.jar"]
 
-# 1) build image: docker build -t virtual_mini .
-# 2) run image: docker run -p 8082:8080 --cpus=8 --memory=1g --name virtual_mini virtual_mini
+# 1) build image: docker build -t virtual_mini_256mb .
+# 2) run image: docker run -p 8082:8080 --cpus=8 --memory=1g --name virtual_mini_256mb virtual_mini_256mb

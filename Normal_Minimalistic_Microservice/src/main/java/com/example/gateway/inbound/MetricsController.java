@@ -13,23 +13,55 @@ import com.sun.management.OperatingSystemMXBean;
 public class MetricsController {
 
     @GetMapping("/system-info")
-    public SystemInfoDTO getSystemInfo() {
-        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        double cpuUsage = osBean.getProcessCpuLoad() * 100;
+    public SystemInfo systemInfo() {
+        Runtime runtime = Runtime.getRuntime();
+        OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
-        // Convert total memory and free memory to megabytes
-        long totalMemoryInBytes = osBean.getTotalMemorySize();
-        long freeMemoryInBytes = osBean.getFreeMemorySize();
-        long totalMemoryInMB = totalMemoryInBytes / (1024 * 1024);  // Convert bytes to megabytes
-        long freeMemoryInMB = freeMemoryInBytes / (1024 * 1024);    // Convert bytes to megabytes
+        long freeMemory = runtime.freeMemory();
+        long totalMemory = runtime.totalMemory();
+        long maxMemory = runtime.maxMemory();
+        double freeRamPercentage = ((double) freeMemory / totalMemory) * 100;
 
-        double percentOfCpuUsed = (cpuUsage / osBean.getAvailableProcessors());
-        double percentOfRamUsed = (1 - ((double) freeMemoryInBytes / totalMemoryInBytes)) * 100;
+        double cpuUsagePercentage = operatingSystemMXBean.getCpuLoad() * 100;
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss:SSS"));
-
-        return new SystemInfoDTO(cpuUsage, totalMemoryInMB, freeMemoryInMB, percentOfCpuUsed, percentOfRamUsed, formattedTime);
+        return new SystemInfo(freeRamPercentage, freeMemory, totalMemory, maxMemory, cpuUsagePercentage);
     }
 
+    public static class SystemInfo {
+
+        private final double freeRamPercentage;
+        private final long freeMemory;
+        private final long totalMemory;
+        private final long maxMemory;
+        private final double cpuUsagePercentage;
+
+        public SystemInfo(double freeRamPercentage, long freeMemory, long totalMemory, long maxMemory,
+                double cpuUsagePercentage) {
+            this.freeRamPercentage = freeRamPercentage;
+            this.freeMemory = freeMemory;
+            this.totalMemory = totalMemory;
+            this.maxMemory = maxMemory;
+            this.cpuUsagePercentage = cpuUsagePercentage;
+        }
+
+        public double getFreeRamPercentage() {
+            return freeRamPercentage;
+        }
+
+        public long getFreeMemory() {
+            return freeMemory;
+        }
+
+        public long getTotalMemory() {
+            return totalMemory;
+        }
+
+        public long getMaxMemory() {
+            return maxMemory;
+        }
+
+        public double getCpuUsagePercentage() {
+            return cpuUsagePercentage;
+        }
+    }
 }

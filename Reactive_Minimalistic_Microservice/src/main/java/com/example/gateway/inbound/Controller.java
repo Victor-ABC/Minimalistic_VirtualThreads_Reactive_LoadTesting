@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @RestController
 @RequestMapping("/minimalistic")
@@ -16,8 +17,39 @@ public class Controller {
 
     @GetMapping
     public Mono<String> get() {
-        // Simulate an asynchronous operation with delay
-        return Mono.delay(java.time.Duration.ofSeconds(4))
-                .map(delay -> "Reactive - Minimalistic");
+        // Introduce a 500 milliseconds delay
+        Mono<String> delayBefore = Mono.delay(java.time.Duration.ofMillis(500))
+                .map(delay -> "Delay before HighCPUTaskReactive");
+
+        // High CPU-intensive task
+        Mono<Integer> highCPUTask = highCPUTaskReactive();
+
+        // Introduce another 500 milliseconds delay after the high CPU-intensive task
+        Mono<String> delayAfter = Mono.delay(java.time.Duration.ofMillis(500))
+                .map(delay -> "Delay after HighCPUTaskReactive");
+
+        // Combine the delays and the high CPU-intensive task
+        return delayBefore.then(highCPUTask).then(delayAfter)
+                .map(result -> "Reactive - Minimalistic");
     }
+
+    public static Mono<Integer> highCPUTaskReactive() {
+        return Mono.fromCallable(() -> {
+            long startTime = System.currentTimeMillis();
+
+            // Perform a high CPU-intensive task
+            int result = 0;
+            for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                result += i;
+            }
+
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+
+            System.out.println("Execution Time: " + executionTime + " milliseconds");
+
+            return result;
+        });
+    }
+
 }

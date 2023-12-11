@@ -17,10 +17,30 @@ public class Controller {
     public String get() {
         // return all students
         try {
-            Thread.sleep(4000);
+            Thread.sleep(500); //DB-Call
+            highCPUTask(); //ca. 500ms
+            Thread.sleep(500); //DB-Call
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return "Virtual - Minimalistic";
     }
+
+    public static void highCPUTask() {
+        long startTime = System.currentTimeMillis();
+
+        // Perform a high CPU-intensive task
+        int result = 0;
+
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            result += i;
+        }
+
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+
+        System.out.println("Result: " + result);
+        System.out.println("Execution Time: " + executionTime + " milliseconds");
+    }
+
 }

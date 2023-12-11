@@ -24,20 +24,14 @@ def read_json(file_path):
 
 def read_csv(file_path):
     # Read CSV into a DataFrame
-    df_csv = pd.read_csv(file_path, header=None, names=['timestamp', 'cpuUsage', 'totalMemory', 'freeMemory', 'percentOfCpuUsed', 'percentOfRamUsed', 'currentTime'])
+    df_csv = pd.read_csv(file_path, header=None, names=['freeRamPercentage', 'freeMemory', 'totalMemory', 'maxMemory', 'cpuUsagePercentage'])
 
     # Calculate the average for relevant columns
-    avg_cpuUsage = df_csv['cpuUsage'].mean()
-    avg_totalMemory = df_csv['totalMemory'].mean()
-    avg_freeMemory = df_csv['freeMemory'].mean()
-    avg_percentOfCpuUsed = df_csv['percentOfCpuUsed'].mean()
-    avg_percentOfRamUsed = df_csv['percentOfRamUsed'].mean() / 100
+    avg_percentOfCpuUsed = df_csv['cpuUsagePercentage'].mean()
+    avg_percentOfRamUsed = df_csv['freeRamPercentage'].mean() 
 
     # Create a DataFrame with average values
     df_avg = pd.DataFrame({
-        'avg_cpuUsage': [avg_cpuUsage],
-        'avg_totalMemory': [avg_totalMemory],
-        'avg_freeMemory': [avg_freeMemory],
         'avg_percentOfCpuUsed': [avg_percentOfCpuUsed],
         'avg_percentOfRamUsed': [avg_percentOfRamUsed]
     })

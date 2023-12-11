@@ -34,7 +34,7 @@ def read_and_visualize_csv(csv_file_path):
 
     # Plot avg_percentOfCpuUsed on the right axis
     color_cpu_used = 'tab:orange'
-    ax2.plot(df.index, df['avg_cpuUsage'] * 100, color=color_cpu_used, linestyle='dashed', marker='o', label='avg_percentOfCpuUsed')
+    ax2.plot(df.index, df['avg_percentOfCpuUsed'] * 100, color=color_cpu_used, linestyle='dashed', marker='o', label='avg_percentOfCpuUsed')
     ax2.tick_params(axis='y', labelcolor=color_cpu_used)
 
     # Plot avg_percentOfRamUsed on the right axis
