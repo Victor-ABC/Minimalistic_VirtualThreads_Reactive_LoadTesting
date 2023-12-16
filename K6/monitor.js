@@ -48,5 +48,14 @@ function saveToCsv(data) {
   });
 }
 
-// Start monitoring every second.
-setInterval(sendMonitorRequest, 1000);
+// Start monitoring after waiting for 25 seconds.
+setTimeout(function() {
+  // Start monitoring every second.
+  var monitorInterval = setInterval(sendMonitorRequest, 1000);
+
+  // Stop the interval after 20 seconds.
+  setTimeout(function() {
+    clearInterval(monitorInterval);
+  }, 20000);
+
+}, 25000);
