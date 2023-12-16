@@ -15,8 +15,8 @@ def read_and_visualize_csv(csv_file_path):
     # Plot bars for avg_duration and request_count on the left axis with a wider bar
     color_duration = 'tab:blue'
     color_count = 'tab:gray'
-    ax1.bar(df.index - bar_width/2, df['avg_duration'], width=bar_width, color=color_duration, label='avg_duration')
-    ax1.bar(df.index + bar_width/2, df['request_count'], width=bar_width, color=color_count, alpha=0.5, label='request_count')
+    ax1.bar(df.index - bar_width/2, df['avg_duration'], width=bar_width, color=color_duration, label='AVG Duration')
+    ax1.bar(df.index + bar_width/2, df['request_count'], width=bar_width, color=color_count, alpha=0.5, label='Request Count')
     ax1.set_xlabel('Virtual Users')
     ax1.set_ylabel('Average Duration (ms) / Request Count', color=color_duration)
     ax1.tick_params(axis='y', labelcolor=color_duration)
@@ -26,24 +26,24 @@ def read_and_visualize_csv(csv_file_path):
 
     # Plot error_rate on the right axis
     color_error_rate = 'tab:red'
-    ax2.plot(df.index, df['error_rate'] * 100, color=color_error_rate, linestyle='dashed', marker='o', label='error_rate')
+    ax2.plot(df.index, df['error_rate'] * 100, color=color_error_rate, linestyle='dashed', marker='o', label='Error Rate')
     ax2.tick_params(axis='y', labelcolor=color_error_rate)
 
-    # Plot avg_percentOfCpuUsed on the right axis
-    color_cpu_used = 'tab:orange'
-    ax2.plot(df.index, df['avg_percentOfCpuUsed'], color=color_cpu_used, linestyle='dashed', marker='o', label='CPU_Used')
-    ax2.tick_params(axis='y', labelcolor=color_cpu_used)
+    # Plot maxMemory on the right axis
+    color_max_memory = 'tab:orange'
+    ax2.plot(df.index, df['avg_maxHeap'], color=color_max_memory, linestyle='dashed', marker='o', label='Heap (MB)')
+    ax2.tick_params(axis='y', labelcolor=color_max_memory)
 
-    # Plot avg_percentOfFreeHeap on the right axis
+    # Plot freeHeapMemory on the right axis
     color_free_heap = 'tab:purple'
-    ax2.plot(df.index, df['avg_percentOfFreeHeap'], color=color_free_heap, linestyle='dashed', marker='o', label='Free_Heap (JVM)')
+    ax2.plot(df.index, df['avg_freeHeapMomory'], color=color_free_heap, linestyle='dashed', marker='o', label='Free Heap (MB)')
     ax2.tick_params(axis='y', labelcolor=color_free_heap)
 
-    # Plot avg_percentOfRamUsed on the right axis
-    color_ram_used = 'tab:green'
-    ax2.set_ylabel('Percentage', color=color_ram_used)
-    ax2.plot(df.index, df['avg_percentOfRamUsed'], color=color_ram_used, linestyle='dashed', marker='o', label='Free_RAM (JVM)')
-    ax2.tick_params(axis='y', labelcolor=color_ram_used)
+    # Plot usedHeapMemory on the right axis
+    color_used_heap = 'tab:green'
+    ax2.set_ylabel('Memory (MB)', color=color_used_heap)
+    ax2.plot(df.index, df['avg_usedHeapMemory'], color=color_used_heap, linestyle='dashed', marker='o', label='Used Heap (MB)')
+    ax2.tick_params(axis='y', labelcolor=color_used_heap)
 
     # Set labels and title
     plt.title('Performance Metrics for Different Virtual Users')

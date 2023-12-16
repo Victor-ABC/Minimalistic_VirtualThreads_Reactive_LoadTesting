@@ -24,18 +24,19 @@ def read_json(file_path):
 
 def read_csv(file_path):
     # Read CSV into a DataFrame
-    df_csv = pd.read_csv(file_path, header=None, names=['timestamp', 'freeRamPercentage', 'cpuUsagePercentage', 'totalMemory', 'freeMemory', 'freeHeapPercentage'])
+    df_csv = pd.read_csv(file_path, header=None, names=['timestamp', 'maxMemory', 'freeHeapMemory', 'usedHeapMemory', 'cpuUsagePercentage', 'freeHeapPercentage', 'usedHeapPercentage'])
 
     # Calculate the average for relevant columns
-    avg_percentOfCpuUsed = df_csv['cpuUsagePercentage'].mean()
-    avg_percentOfRamUsed = df_csv['freeRamPercentage'].mean() 
-    avg_percentOfFreeHeap = df_csv['freeHeapPercentage'].mean() 
+    print(df_csv['maxMemory'].mean())
+    avg_maxHeap = df_csv['maxMemory'].mean()
+    avg_freeHeapMomory = df_csv['freeHeapMemory'].mean() 
+    avg_usedHeapMemory = df_csv['usedHeapMemory'].mean() 
 
     # Create a DataFrame with average values
     df_avg = pd.DataFrame({
-        'avg_percentOfCpuUsed': [avg_percentOfCpuUsed],
-        'avg_percentOfRamUsed': [avg_percentOfRamUsed],
-        'avg_percentOfFreeHeap' : [avg_percentOfFreeHeap]
+        'avg_maxHeap': [avg_maxHeap],
+        'avg_freeHeapMomory': [avg_freeHeapMomory],
+        'avg_usedHeapMemory' : [avg_usedHeapMemory]
     })
 
     return df_avg

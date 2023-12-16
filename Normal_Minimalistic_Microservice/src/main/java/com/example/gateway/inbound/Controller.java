@@ -37,6 +37,6 @@ public class Controller {
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
 
-        System.out.println("Execution Time: " + executionTime + " milliseconds");
+        System.out.println("Execution Time: " + executionTime + " milliseconds Result:" + result);
     }
 }
