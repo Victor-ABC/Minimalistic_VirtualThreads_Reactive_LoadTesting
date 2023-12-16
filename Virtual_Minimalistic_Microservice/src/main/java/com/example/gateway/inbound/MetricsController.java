@@ -2,8 +2,7 @@ package com.example.gateway.inbound;
 
 import com.sun.management.OperatingSystemMXBean;
 import java.lang.management.ManagementFactory;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.lang.management.MemoryMXBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +15,7 @@ public class MetricsController {
     public SystemInfo systemInfo() {
         Runtime runtime = Runtime.getRuntime();
         OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
 
         long freeMemory = runtime.freeMemory();
         long totalMemory = runtime.totalMemory();
@@ -24,7 +24,11 @@ public class MetricsController {
 
         double cpuUsagePercentage = operatingSystemMXBean.getCpuLoad() * 100;
 
-        return new SystemInfo(freeRamPercentage, freeMemory, totalMemory, maxMemory, cpuUsagePercentage);
+        long freeHeapMemory = memoryMXBean.getHeapMemoryUsage().getMax() - memoryMXBean.getHeapMemoryUsage().getUsed();
+        double freeHeapPercentage = ((double) freeHeapMemory / memoryMXBean.getHeapMemoryUsage().getMax()) * 100;
+
+        return new SystemInfo(freeRamPercentage, freeMemory, totalMemory, maxMemory, cpuUsagePercentage,
+                freeHeapPercentage);
     }
 
 
@@ -35,14 +39,16 @@ public class MetricsController {
         private final long totalMemory;
         private final long maxMemory;
         private final double cpuUsagePercentage;
+        private final double freeHeapPercentage;
 
         public SystemInfo(double freeRamPercentage, long freeMemory, long totalMemory, long maxMemory,
-                double cpuUsagePercentage) {
+                double cpuUsagePercentage, double freeHeapPercentage) {
             this.freeRamPercentage = freeRamPercentage;
             this.freeMemory = freeMemory;
             this.totalMemory = totalMemory;
             this.maxMemory = maxMemory;
             this.cpuUsagePercentage = cpuUsagePercentage;
+            this.freeHeapPercentage = freeHeapPercentage;
         }
 
         public double getFreeRamPercentage() {
@@ -63,6 +69,10 @@ public class MetricsController {
 
         public double getCpuUsagePercentage() {
             return cpuUsagePercentage;
+        }
+
+        public double getFreeHeapPercentage() {
+            return freeHeapPercentage;
         }
     }
 }

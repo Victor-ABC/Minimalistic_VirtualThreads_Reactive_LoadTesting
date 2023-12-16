@@ -17,9 +17,9 @@ public class Controller {
     public String get() {
         // return all students
         try {
-            Thread.sleep(500); //DB-Call
-            highCPUTask(); //ca. 500ms
-            Thread.sleep(500); //DB-Call
+            Thread.sleep(2000); //DB-Call
+            //highCPUTask(); //ca. 500ms
+            Thread.sleep(2000); //DB-Call
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
