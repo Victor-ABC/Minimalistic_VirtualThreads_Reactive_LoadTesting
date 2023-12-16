@@ -18,18 +18,18 @@ public class Controller {
     @GetMapping
     public Mono<String> get() {
         // Introduce a 500 milliseconds delay
-        Mono<String> delayBefore = Mono.delay(java.time.Duration.ofMillis(2000))
+        Mono<String> delayBefore = Mono.delay(java.time.Duration.ofMillis(500))
                 .map(delay -> "Delay before HighCPUTaskReactive");
 
         // High CPU-intensive task
-        //Mono<Integer> highCPUTask = highCPUTaskReactive();
+        Mono<Integer> highCPUTask = highCPUTaskReactive();
 
         // Introduce another 500 milliseconds delay after the high CPU-intensive task
-        Mono<String> delayAfter = Mono.delay(java.time.Duration.ofMillis(2000))
+        Mono<String> delayAfter = Mono.delay(java.time.Duration.ofMillis(500))
                 .map(delay -> "Delay after HighCPUTaskReactive");
 
         // Combine the delays and the high CPU-intensive task
-        return delayBefore.then(delayAfter)
+        return delayBefore.then(highCPUTask).then(delayAfter)
                 .map(result -> "Reactive - Minimalistic");
     }
 
@@ -39,7 +39,7 @@ public class Controller {
 
             // Perform a high CPU-intensive task
             int result = 0;
-            for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            for (int i = 0; i < 100_000_000; i++) {
                 result += i;
             }
 
@@ -51,5 +51,6 @@ public class Controller {
             return result;
         });
     }
+
 
 }

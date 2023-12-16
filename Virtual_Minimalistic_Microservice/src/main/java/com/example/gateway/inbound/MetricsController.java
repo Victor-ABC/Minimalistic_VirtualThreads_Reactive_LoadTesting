@@ -17,50 +17,54 @@ public class MetricsController {
         OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
 
-        long freeMemory = runtime.freeMemory();
-        long totalMemory = runtime.totalMemory();
         long maxMemory = runtime.maxMemory();
-        double freeRamPercentage = ((double) freeMemory / totalMemory) * 100;
+        double freeRamPercentage = ((double) runtime.freeMemory() / maxMemory) * 100;
 
         double cpuUsagePercentage = operatingSystemMXBean.getCpuLoad() * 100;
 
-        long freeHeapMemory = memoryMXBean.getHeapMemoryUsage().getMax() - memoryMXBean.getHeapMemoryUsage().getUsed();
-        double freeHeapPercentage = ((double) freeHeapMemory / memoryMXBean.getHeapMemoryUsage().getMax()) * 100;
+        long freeHeapMemory =
+                memoryMXBean.getHeapMemoryUsage().getMax() - memoryMXBean.getHeapMemoryUsage().getUsed();
+        double freeHeapPercentage =
+                ((double) freeHeapMemory / memoryMXBean.getHeapMemoryUsage().getMax()) * 100;
 
-        return new SystemInfo(freeRamPercentage, freeMemory, totalMemory, maxMemory, cpuUsagePercentage,
-                freeHeapPercentage);
+        // Convert memory values to megabytes
+        maxMemory /= (1024 * 1024);
+        freeHeapMemory /= (1024 * 1024);
+
+        long usedHeapMemory = memoryMXBean.getHeapMemoryUsage().getUsed();
+        double usedHeapPercentage =
+                ((double) usedHeapMemory / memoryMXBean.getHeapMemoryUsage().getMax()) * 100;
+
+        return new SystemInfo(freeRamPercentage, maxMemory, freeHeapMemory, usedHeapMemory / (1024 * 1024),
+                cpuUsagePercentage,
+                freeHeapPercentage, usedHeapPercentage);
     }
 
 
     public static class SystemInfo {
 
         private final double freeRamPercentage;
-        private final long freeMemory;
-        private final long totalMemory;
         private final long maxMemory;
+        private final long freeHeapMemory;
+        private final long usedHeapMemory;
         private final double cpuUsagePercentage;
         private final double freeHeapPercentage;
+        private final double usedHeapPercentage;
 
-        public SystemInfo(double freeRamPercentage, long freeMemory, long totalMemory, long maxMemory,
-                double cpuUsagePercentage, double freeHeapPercentage) {
+        public SystemInfo(double freeRamPercentage, long maxMemory, long freeHeapMemory,
+                long usedHeapMemory,
+                double cpuUsagePercentage, double freeHeapPercentage, double usedHeapPercentage) {
             this.freeRamPercentage = freeRamPercentage;
-            this.freeMemory = freeMemory;
-            this.totalMemory = totalMemory;
             this.maxMemory = maxMemory;
             this.cpuUsagePercentage = cpuUsagePercentage;
             this.freeHeapPercentage = freeHeapPercentage;
+            this.freeHeapMemory = freeHeapMemory;
+            this.usedHeapMemory = usedHeapMemory;
+            this.usedHeapPercentage = usedHeapPercentage;
         }
 
         public double getFreeRamPercentage() {
             return freeRamPercentage;
-        }
-
-        public long getFreeMemory() {
-            return freeMemory;
-        }
-
-        public long getTotalMemory() {
-            return totalMemory;
         }
 
         public long getMaxMemory() {
@@ -73,6 +77,18 @@ public class MetricsController {
 
         public double getFreeHeapPercentage() {
             return freeHeapPercentage;
+        }
+
+        public long getFreeHeapMemory() {
+            return freeHeapMemory;
+        }
+
+        public long getUsedHeapMemory() {
+            return usedHeapMemory;
+        }
+
+        public double getUsedHeapPercentage() {
+            return usedHeapPercentage;
         }
     }
 }
