@@ -22,14 +22,14 @@ public class Controller {
                 .map(delay -> "Delay before HighCPUTaskReactive");
 
         // High CPU-intensive task
-        Mono<Integer> highCPUTask = highCPUTaskReactive();
+        //Mono<Integer> highCPUTask = highCPUTaskReactive();
 
         // Introduce another 500 milliseconds delay after the high CPU-intensive task
         Mono<String> delayAfter = Mono.delay(java.time.Duration.ofMillis(500))
                 .map(delay -> "Delay after HighCPUTaskReactive");
 
         // Combine the delays and the high CPU-intensive task
-        return delayBefore.then(highCPUTask).then(delayAfter)
+        return delayBefore.then(delayAfter)
                 .map(result -> "Reactive - Minimalistic");
     }
 
