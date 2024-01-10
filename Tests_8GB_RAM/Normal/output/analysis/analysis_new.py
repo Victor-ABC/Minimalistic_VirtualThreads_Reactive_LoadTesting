@@ -27,15 +27,17 @@ def read_csv(file_path):
     df_csv = pd.read_csv(file_path, header=None, names=['timestamp', 'maxMemory', 'freeHeapMemory', 'usedHeapMemory', 'cpuUsagePercentage', 'freeHeapPercentage', 'usedHeapPercentage'])
 
     # Calculate the average for relevant columns
-    avg_maxHeap = df_csv['maxMemory'].mean()
-    avg_freeHeapMomory = df_csv['freeHeapMemory'].mean() 
-    avg_usedHeapMemory = df_csv['usedHeapMemory'].mean() 
+    avg_maxHeap = 100
+    avg_freeHeapPercentage = df_csv['freeHeapPercentage'].mean() 
+    avg_usedHeapPercentage = df_csv['usedHeapPercentage'].mean() 
+    avg_usedCPU = df_csv['cpuUsagePercentage'].mean()
 
     # Create a DataFrame with average values
     df_avg = pd.DataFrame({
         'avg_maxHeap': [avg_maxHeap],
-        'avg_freeHeapMomory': [avg_freeHeapMomory],
-        'avg_usedHeapMemory' : [avg_usedHeapMemory]
+        'avg_freeHeapPercentage': [avg_freeHeapPercentage],
+        'avg_usedHeapPercentage' : [avg_usedHeapPercentage],
+        'avg_usedCPU' : [avg_usedCPU]
     })
 
     return df_avg
@@ -55,7 +57,7 @@ def main():
     # Create an empty DataFrame to store the results
     final_df = pd.DataFrame()
 
-    for vus in range(start_vus, end_vus + 1, 100): #todo: 10 bzw. 100 sind die Schrittweite der VUS!!!
+    for vus in range(start_vus, end_vus + 1, 100):
         # Construct the paths based on the loop variable
         json_file_path = os.path.abspath(f'./../k6/summary_{vus}.json')
         csv_file_path = os.path.abspath(f'./../ressources/metric_output_{vus}.csv')
